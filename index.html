@@ -812,8 +812,8 @@
         <div class="brand">
           <div class="mark" aria-hidden="true">TDK</div>
           <div>
-            <h1>Ship private source. Publish clean binaries.</h1>
-            <p class="sub">curl installer → public release assets → Compose workflow → dependency graph → DoD validation</p>
+            <h1>One service.json becomes a working stack.</h1>
+            <p class="sub">project manifest → generated Tilt/Docker files → services → dependency graph → validation</p>
           </div>
         </div>
 
@@ -837,23 +837,23 @@
             <span class="activity" aria-hidden="true"></span>
           </div>
           <div class="terminal">
-            <div class="terminal-line"><span class="prompt">$</span> <span class="typed">curl -fsSL https://tdk.dev/install | sh</span><span class="cursor"></span></div>
-            <div class="terminal-line muted">Resolving latest public release for darwin-arm64...</div>
+            <div class="terminal-line"><span class="prompt">$</span> <span class="typed">curl -fsSL https://tdk-landscape.github.io/install.sh | sh</span><span class="cursor"></span></div>
+            <div class="terminal-line muted">Installing latest TDK CLI binary...</div>
             <div class="terminal-line ok">✓ tdk installed to ~/.local/bin/tdk</div>
-            <div class="terminal-line"><span class="prompt">$</span> tdk release inspect <span class="path">tdk-cli</span></div>
-            <div class="terminal-line ok">✓ source repository private · compiled binaries public</div>
-            <div class="terminal-line"><span class="prompt">$</span> docker compose up --build</div>
-            <div class="terminal-line warn">compose: api, database, worker, web detected</div>
-            <div class="terminal-line ok">✓ generated project resources and service contracts</div>
-            <div class="terminal-line muted">linking api → database with health-gated startup</div>
-            <div class="terminal-line"><span class="prompt">$</span> tdk quick-start validate</div>
-            <div class="terminal-line ok">✓ Definition of Done passed · ready for founders/devs</div>
+            <div class="terminal-line"><span class="prompt">$</span> tdk project --yes</div>
+            <div class="terminal-line ok">✓ generated .tdk/project.json, Tiltfile, platform defaults</div>
+            <div class="terminal-line"><span class="prompt">$</span> tdk resource database --type backend --stack pre-alpha</div>
+            <div class="terminal-line ok">✓ service.json, Dockerfile, package.json, tests</div>
+            <div class="terminal-line"><span class="prompt">$</span> tdk resource api --type backend --stack pre-alpha</div>
+            <div class="terminal-line muted">api.internalDependencies = ["database"]</div>
+            <div class="terminal-line"><span class="prompt">$</span> tdk project --check && tdk status --verbose</div>
+            <div class="terminal-line ok">✓ pre-alpha: 2 resources discovered · configs valid</div>
 
             <div class="progress" aria-hidden="true"><span></span></div>
             <div class="stats" aria-label="Demo metrics">
-              <div class="metric"><b>&lt; 60s</b><span>Install Path</span></div>
-              <div class="metric"><b>4 svc</b><span>Compose Stack</span></div>
-              <div class="metric"><b>100%</b><span>DoD Pass</span></div>
+              <div class="metric"><b>1 file</b><span>service.json</span></div>
+              <div class="metric"><b>2 svc</b><span>Discovered</span></div>
+              <div class="metric"><b>✓</b><span>Validated</span></div>
             </div>
           </div>
         </section>
@@ -869,34 +869,34 @@
             </div>
             <div class="beats">
               <div class="beat-label">Install</div>
-              <div class="beat-label">Release</div>
-              <div class="beat-label">Compose</div>
+              <div class="beat-label">Project</div>
+              <div class="beat-label">Resource</div>
               <div class="beat-label">Generate</div>
               <div class="beat-label">Depends</div>
               <div class="beat-label">Validate</div>
             </div>
           </section>
 
-          <section class="panel" aria-label="Release assets">
+          <section class="panel" aria-label="Generated outputs">
             <div class="panel-head">
-              <span>Public Release Assets</span>
-              <span class="ghost">source stays private</span>
+              <span>Generated Outputs</span>
+              <span class="ghost">inspectable files</span>
             </div>
             <div class="release-grid">
               <article class="release-card">
-                <strong>tdk-darwin-arm64</strong>
-                <span class="chip">signed</span>
-                <p class="card-copy">Native binary pulled by the short installer URL.</p>
+                <strong>service.json</strong>
+                <span class="chip">source of truth</span>
+                <p class="card-copy">Name, type, stack, port, and dependencies.</p>
               </article>
               <article class="release-card">
-                <strong>tdk-linux-x64</strong>
-                <span class="chip">public</span>
-                <p class="card-copy">Compiled asset only; implementation remains locked down.</p>
+                <strong>Tiltfile</strong>
+                <span class="chip">generated</span>
+                <p class="card-copy">Local orchestration without writing Kubernetes YAML.</p>
               </article>
               <article class="release-card">
-                <strong>checksums.txt</strong>
-                <span class="chip">verified</span>
-                <p class="card-copy">Installer confirms integrity before touching the path.</p>
+                <strong>Dockerfile + tests</strong>
+                <span class="chip">ready</span>
+                <p class="card-copy">Each resource gets runnable defaults and smoke coverage.</p>
               </article>
             </div>
           </section>
@@ -904,28 +904,28 @@
           <div class="systems">
             <section class="panel compose" aria-label="Docker compose workflow">
               <div class="panel-head">
-                <span>Docker Compose Workflow</span>
+                <span>TDK Workflow</span>
                 <span class="ghost">generated</span>
               </div>
               <div class="compose-flow">
                 <div class="compose-step">
                   <div class="icon">01</div>
-                  <div><b>Scaffold resources</b><span>routes, services, env, compose</span></div>
+                  <div><b>Scaffold resources</b><span>service manifests and runnable files</span></div>
                   <div class="status">ready</div>
                 </div>
                 <div class="compose-step">
                   <div class="icon">02</div>
-                  <div><b>Build stack</b><span>docker compose up --build</span></div>
+                  <div><b>Generate orchestration</b><span>Tiltfile and platform defaults</span></div>
                   <div class="status">live</div>
                 </div>
                 <div class="compose-step">
                   <div class="icon">03</div>
-                  <div><b>Wire dependencies</b><span>api waits for database health</span></div>
+                  <div><b>Wire dependencies</b><span>api depends on database</span></div>
                   <div class="status">linked</div>
                 </div>
                 <div class="compose-step">
                   <div class="icon">04</div>
-                  <div><b>Quick Start validation</b><span>smoke checks and DoD gates</span></div>
+                  <div><b>Validate project</b><span>status discovers 2 resources</span></div>
                   <div class="status">passed</div>
                 </div>
               </div>
@@ -948,7 +948,7 @@
 
                 <div class="validation">
                   <div class="check">✓</div>
-                  <div><b>Definition of Done passed</b><span>install, release, compose, graph, smoke validation</span></div>
+                  <div><b>Definition of Done passed</b><span>install, generate, dependency graph, validation</span></div>
                   <div class="score">6/6</div>
                 </div>
               </div>
@@ -959,7 +959,7 @@
 
       <footer class="caption">
         <span><strong>TDK CLI</strong> demo animation · no external assets · recording-friendly loop</span>
-        <span>Private source / public compiled binaries</span>
+        <span>service.json → generated local development stack</span>
       </footer>
     </section>
   </main>
