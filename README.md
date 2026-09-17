@@ -1,10 +1,22 @@
-# TDK demo animation
+# TDK Demo Animation
 
-Standalone HTML/CSS/JS recording page for TDK CLI marketing videos.
+Standalone, recording-friendly marketing demo animation for TDK CLI.
 
-Open `index.html` in a browser and record the animation. No build step or external assets.
+## Files
 
-Live repo:
+- `index.html` - self-contained HTML/CSS/JS animation with no external assets or dependencies.
+- `README.md` - this note.
 
-https://github.com/tdk-landscape/tdk-demo-animation
+## View
 
+Open `index.html` directly in a browser:
+
+```bash
+open /private/var/www/2025/ollamar1/tdk-demo-animation/index.html
+```
+
+## Recording Notes
+
+- The animation loops every 40 seconds.
+- Use the on-screen Pause and Replay controls for capture timing.
+- The page is designed for a dark, high-contrast terminal/control-room look and includes the required beats: curl install, public release assets, Docker Compose workflow, project/resource generation, API-to-database dependency graph, and Quick Start / DoD validation.

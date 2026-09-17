@@ -7,249 +7,1013 @@
   <style>
     :root {
       color-scheme: dark;
-      --bg: #080a0d;
-      --panel: #10151b;
-      --line: #26313d;
-      --text: #f3f0e8;
-      --muted: #8d98a7;
-      --green: #9ef08a;
-      --cyan: #74d6ff;
-      --amber: #ffd166;
+      --bg: #05070a;
+      --panel: rgba(12, 17, 24, .82);
+      --panel-strong: rgba(18, 25, 35, .95);
+      --line: rgba(146, 170, 190, .22);
+      --line-hot: rgba(56, 232, 190, .82);
+      --text: #edf7ff;
+      --muted: #8fa2b7;
+      --dim: #526171;
+      --cyan: #3be7ff;
+      --mint: #39e6bb;
+      --amber: #ffcf66;
       --red: #ff6b6b;
-      --violet: #b79aff;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --blue: #6d8cff;
+      --green: #72f29a;
+      --shadow: 0 24px 90px rgba(0, 0, 0, .55);
+      --radius: 8px;
+      --beat: 40s;
+      --mono: "SFMono-Regular", "Cascadia Code", "Roboto Mono", Consolas, monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
+
     * { box-sizing: border-box; }
+
+    html,
     body {
-      margin: 0;
-      min-height: 100vh;
-      overflow: hidden;
-      background:
-        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px),
-        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
-        radial-gradient(circle at 18% 20%, rgba(116,214,255,.18), transparent 30%),
-        radial-gradient(circle at 86% 72%, rgba(183,154,255,.13), transparent 34%),
-        var(--bg);
-      background-size: 64px 64px, 64px 64px, auto, auto, auto;
-      color: var(--text);
-    }
-    .stage {
-      width: 100vw;
-      height: 100vh;
-      display: grid;
-      grid-template-columns: 1.05fr .95fr;
-      gap: 28px;
-      padding: 34px;
-    }
-    .left, .right {
-      min-height: 0;
-      border: 1px solid rgba(255,255,255,.1);
-      background: linear-gradient(180deg, rgba(16,21,27,.96), rgba(9,12,16,.94));
-      box-shadow: 0 28px 80px rgba(0,0,0,.45);
-      border-radius: 8px;
-      overflow: hidden;
-    }
-    .left {
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-    }
-    header {
-      padding: 24px 28px 18px;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      justify-content: space-between;
-      gap: 20px;
-      align-items: center;
-    }
-    h1 {
-      margin: 0;
-      font-size: 46px;
-      line-height: .92;
-      letter-spacing: 0;
-    }
-    .tag {
-      color: var(--muted);
-      font: 13px ui-monospace, SFMono-Regular, Menlo, monospace;
-      text-transform: uppercase;
-    }
-    .status {
-      border: 1px solid rgba(158,240,138,.35);
-      color: var(--green);
-      padding: 9px 12px;
-      border-radius: 999px;
-      font: 13px ui-monospace, SFMono-Regular, Menlo, monospace;
-      white-space: nowrap;
-    }
-    .terminal {
-      padding: 28px;
-      font: 18px/1.65 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      overflow: hidden;
-    }
-    .line {
-      opacity: 0;
-      transform: translateY(14px);
-      animation: lineIn .55s ease forwards;
-      animation-delay: calc(var(--i) * 1.35s);
-      white-space: pre-wrap;
-    }
-    .prompt { color: var(--cyan); }
-    .ok { color: var(--green); }
-    .hot { color: var(--amber); }
-    .dim { color: var(--muted); }
-    .footer {
-      padding: 16px 28px;
-      display: flex;
-      justify-content: space-between;
-      border-top: 1px solid var(--line);
-      color: var(--muted);
-      font: 13px ui-monospace, SFMono-Regular, Menlo, monospace;
-    }
-    .right {
-      position: relative;
-      padding: 26px;
-    }
-    .diagram {
-      position: relative;
-      height: 100%;
-      min-height: 640px;
-    }
-    .node {
-      position: absolute;
-      width: 178px;
-      min-height: 78px;
-      border: 1px solid rgba(255,255,255,.15);
-      background: rgba(14,19,25,.92);
-      border-radius: 8px;
-      padding: 14px;
-      box-shadow: 0 18px 50px rgba(0,0,0,.35);
-      opacity: 0;
-      animation: pop .6s cubic-bezier(.2,.9,.2,1.2) forwards;
-      animation-delay: var(--d);
-    }
-    .node strong { display: block; font-size: 17px; margin-bottom: 6px; }
-    .node small { color: var(--muted); line-height: 1.35; display: block; }
-    .n1 { left: 5%; top: 7%; --d: 1.1s; border-color: rgba(116,214,255,.45); }
-    .n2 { right: 7%; top: 11%; --d: 2.8s; border-color: rgba(255,209,102,.45); }
-    .n3 { left: 14%; top: 38%; --d: 4.8s; border-color: rgba(183,154,255,.5); }
-    .n4 { right: 12%; top: 45%; --d: 6.7s; border-color: rgba(158,240,138,.45); }
-    .n5 { left: 29%; bottom: 10%; width: 230px; --d: 8.7s; border-color: rgba(158,240,138,.7); }
-    svg {
-      position: absolute;
-      inset: 0;
       width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-    path {
-      fill: none;
-      stroke: rgba(116,214,255,.62);
-      stroke-width: 2;
-      stroke-dasharray: 800;
-      stroke-dashoffset: 800;
-      animation: draw 1.2s ease forwards;
-    }
-    .p1 { animation-delay: 3.4s; }
-    .p2 { animation-delay: 5.5s; stroke: rgba(183,154,255,.68); }
-    .p3 { animation-delay: 7.4s; stroke: rgba(158,240,138,.7); }
-    .p4 { animation-delay: 9.2s; stroke: rgba(255,209,102,.75); }
-    .badge {
-      position: absolute;
-      right: 26px;
-      bottom: 24px;
-      display: grid;
-      gap: 8px;
-      width: 240px;
-    }
-    .metric {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 12px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(255,255,255,.035);
-      font: 13px ui-monospace, SFMono-Regular, Menlo, monospace;
-    }
-    .controls {
-      position: fixed;
-      left: 34px;
-      bottom: 24px;
-      display: flex;
-      gap: 10px;
-      z-index: 3;
-    }
-    button, a.button {
-      border: 1px solid rgba(255,255,255,.16);
-      background: rgba(16,21,27,.9);
+      min-height: 100%;
+      margin: 0;
+      background:
+        radial-gradient(circle at 12% 8%, rgba(59, 231, 255, .16), transparent 28rem),
+        radial-gradient(circle at 85% 18%, rgba(57, 230, 187, .12), transparent 30rem),
+        linear-gradient(135deg, #030407 0%, #071018 42%, #07090d 100%);
       color: var(--text);
-      padding: 10px 14px;
-      border-radius: 8px;
-      font: 13px ui-monospace, SFMono-Regular, Menlo, monospace;
-      text-decoration: none;
+      font-family: var(--sans);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,.026) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.9), rgba(0,0,0,.2));
+    }
+
+    button {
+      border: 0;
+      color: inherit;
+      font: inherit;
       cursor: pointer;
     }
-    @keyframes lineIn { to { opacity: 1; transform: translateY(0); } }
-    @keyframes pop { to { opacity: 1; transform: translateY(0) scale(1); } from { transform: translateY(16px) scale(.96); } }
-    @keyframes draw { to { stroke-dashoffset: 0; } }
-    @media (max-width: 900px) {
-      body { overflow: auto; }
-      .stage { height: auto; grid-template-columns: 1fr; padding: 16px; }
-      h1 { font-size: 36px; }
-      .diagram { min-height: 620px; }
+
+    .stage {
+      position: relative;
+      min-height: 100vh;
+      padding: 22px;
+      display: grid;
+      place-items: center;
+    }
+
+    .demo {
+      position: relative;
+      width: min(1480px, calc(100vw - 44px));
+      min-height: min(820px, calc(100vh - 44px));
+      padding: clamp(18px, 2vw, 30px);
+      border: 1px solid rgba(156, 185, 210, .2);
+      border-radius: 10px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.018)),
+        rgba(5, 8, 12, .72);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .demo::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: inherit;
+      background: linear-gradient(90deg, transparent, rgba(59, 231, 255, .08), transparent);
+      transform: translateX(-100%);
+      animation: sweep var(--beat) linear infinite;
+    }
+
+    .paused .demo::after,
+    .paused .anim,
+    .paused .line,
+    .paused .node,
+    .paused .typed,
+    .paused .cursor,
+    .paused .activity::after,
+    .paused .scan,
+    .paused .progress span,
+    .paused .validation,
+    .paused .metric,
+    .paused .terminal-line,
+    .paused .timeline-marker,
+    .paused .release-card,
+    .paused .compose-step {
+      animation-play-state: paused !important;
+    }
+
+    .restart *,
+    .restart *::before,
+    .restart *::after {
+      animation: none !important;
+    }
+
+    @keyframes sweep {
+      0%, 5% { transform: translateX(-100%); }
+      18%, 100% { transform: translateX(100%); }
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      border: 1px solid rgba(57, 230, 187, .42);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: var(--mint);
+      font: 800 17px var(--mono);
+      background:
+        linear-gradient(135deg, rgba(57, 230, 187, .14), rgba(109, 140, 255, .08)),
+        rgba(8, 14, 20, .9);
+      box-shadow: 0 0 28px rgba(57, 230, 187, .12);
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(22px, 2.1vw, 34px);
+      line-height: 1.02;
+      letter-spacing: 0;
+    }
+
+    .sub {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font: 500 13px/1.35 var(--mono);
+      overflow-wrap: anywhere;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .control {
+      height: 38px;
+      min-width: 38px;
+      padding: 0 13px;
+      border-radius: 7px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(15, 22, 31, .96);
+      border: 1px solid rgba(154, 178, 201, .22);
+      color: #dcecff;
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+
+    .control:hover {
+      transform: translateY(-1px);
+      border-color: rgba(57, 230, 187, .48);
+      background: rgba(21, 31, 43, .98);
+    }
+
+    .control svg {
+      width: 16px;
+      height: 16px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+    }
+
+    .clock {
+      min-width: 78px;
+      color: var(--mint);
+      font: 700 13px var(--mono);
+      text-align: right;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(360px, .96fr) minmax(520px, 1.35fr);
+      gap: 18px;
+      padding-top: 18px;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 14px 38px rgba(0,0,0,.25);
+      min-width: 0;
+    }
+
+    .panel-head {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      color: #d8e7f5;
+      font: 700 12px var(--mono);
+      text-transform: uppercase;
+    }
+
+    .activity {
+      position: relative;
+      width: 76px;
+      height: 7px;
+      border-radius: 99px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+    }
+
+    .activity::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      width: 34%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan), var(--mint));
+      animation: activity var(--beat) ease-in-out infinite;
+    }
+
+    @keyframes activity {
+      0%, 100% { transform: translateX(-15%); }
+      16% { transform: translateX(35%); }
+      32% { transform: translateX(95%); }
+      48% { transform: translateX(145%); }
+      64% { transform: translateX(78%); }
+      82% { transform: translateX(180%); }
+    }
+
+    .terminal {
+      min-height: 382px;
+      padding: 16px;
+      font: 600 14px/1.72 var(--mono);
+      color: #dcecff;
+    }
+
+    .prompt { color: var(--mint); }
+    .path { color: var(--blue); }
+    .ok { color: var(--green); }
+    .warn { color: var(--amber); }
+    .muted { color: var(--muted); }
+    .ghost { color: var(--dim); }
+
+    .terminal-line {
+      opacity: 0;
+      transform: translateY(10px);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      animation: lineIn var(--beat) linear infinite;
+    }
+
+    .terminal-line:nth-child(1) { animation-delay: 0s; }
+    .terminal-line:nth-child(2) { animation-delay: .9s; }
+    .terminal-line:nth-child(3) { animation-delay: 2.2s; }
+    .terminal-line:nth-child(4) { animation-delay: 5.3s; }
+    .terminal-line:nth-child(5) { animation-delay: 8.3s; }
+    .terminal-line:nth-child(6) { animation-delay: 12.6s; }
+    .terminal-line:nth-child(7) { animation-delay: 15.4s; }
+    .terminal-line:nth-child(8) { animation-delay: 19.5s; }
+    .terminal-line:nth-child(9) { animation-delay: 23.2s; }
+    .terminal-line:nth-child(10) { animation-delay: 28s; }
+    .terminal-line:nth-child(11) { animation-delay: 32.4s; }
+
+    @keyframes lineIn {
+      0%, 2% { opacity: 0; transform: translateY(10px); }
+      4%, 88% { opacity: 1; transform: translateY(0); }
+      96%, 100% { opacity: 0; transform: translateY(-6px); }
+    }
+
+    .typed {
+      display: inline-block;
+      max-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      vertical-align: bottom;
+      animation: typeInstall var(--beat) steps(52, end) infinite;
+    }
+
+    @keyframes typeInstall {
+      0%, 2% { max-width: 0; }
+      10%, 96% { max-width: 45em; }
+      100% { max-width: 0; }
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 1.1em;
+      margin-left: 3px;
+      background: var(--mint);
+      vertical-align: -.18em;
+      animation: blink .8s steps(2) infinite;
+    }
+
+    @keyframes blink { 50% { opacity: 0; } }
+
+    .progress {
+      height: 8px;
+      margin-top: 16px;
+      border-radius: 99px;
+      background: rgba(255,255,255,.08);
+      overflow: hidden;
+    }
+
+    .progress span {
+      display: block;
+      height: 100%;
+      width: 0;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan), var(--mint), var(--amber));
+      animation: progress var(--beat) linear infinite;
+    }
+
+    @keyframes progress {
+      0% { width: 0%; }
+      12% { width: 18%; }
+      28% { width: 36%; }
+      44% { width: 55%; }
+      60% { width: 71%; }
+      78% { width: 90%; }
+      90%, 96% { width: 100%; }
+      100% { width: 0%; }
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .metric {
+      padding: 12px;
+      border: 1px solid rgba(154, 178, 201, .18);
+      border-radius: 7px;
+      background: rgba(255,255,255,.035);
+      opacity: .58;
+      animation: metricPulse var(--beat) linear infinite;
+    }
+
+    .metric:nth-child(1) { animation-delay: 6s; }
+    .metric:nth-child(2) { animation-delay: 18s; }
+    .metric:nth-child(3) { animation-delay: 31s; }
+
+    @keyframes metricPulse {
+      0%, 13%, 100% { opacity: .58; border-color: rgba(154, 178, 201, .18); }
+      4%, 10% { opacity: 1; border-color: rgba(57, 230, 187, .5); box-shadow: inset 0 0 28px rgba(57, 230, 187, .06); }
+    }
+
+    .metric b {
+      display: block;
+      color: #f2fbff;
+      font-size: 19px;
+      line-height: 1.1;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 5px;
+      color: var(--muted);
+      font: 700 11px var(--mono);
+      text-transform: uppercase;
+    }
+
+    .right {
+      display: grid;
+      grid-template-rows: auto auto 1fr;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .timeline {
+      padding: 13px 14px 15px;
+    }
+
+    .timeline-track {
+      position: relative;
+      height: 48px;
+      border: 1px solid rgba(154, 178, 201, .18);
+      border-radius: 7px;
+      background: rgba(255,255,255,.028);
+      overflow: hidden;
+    }
+
+    .timeline-track::before {
+      content: "";
+      position: absolute;
+      top: 23px;
+      left: 18px;
+      right: 18px;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(59,231,255,.28), rgba(57,230,187,.76), rgba(255,207,102,.32));
+    }
+
+    .timeline-marker {
+      position: absolute;
+      top: 12px;
+      width: 23px;
+      height: 23px;
+      margin-left: -11px;
+      border-radius: 50%;
+      border: 1px solid rgba(57,230,187,.75);
+      background: #081118;
+      box-shadow: 0 0 24px rgba(57,230,187,.22);
+      animation: marker var(--beat) cubic-bezier(.6, 0, .2, 1) infinite;
+    }
+
+    @keyframes marker {
+      0%, 5% { left: 6%; }
+      17% { left: 20%; }
+      31% { left: 35%; }
+      46% { left: 51%; }
+      61% { left: 67%; }
+      78%, 92% { left: 88%; }
+      100% { left: 6%; }
+    }
+
+    .beats {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+      color: var(--muted);
+      font: 700 10px/1.2 var(--mono);
+      text-transform: uppercase;
+    }
+
+    .beat-label { min-width: 0; overflow-wrap: anywhere; }
+
+    .release-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 14px;
+    }
+
+    .release-card {
+      min-height: 118px;
+      padding: 14px;
+      border-radius: 7px;
+      border: 1px solid rgba(154, 178, 201, .18);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.052), rgba(255,255,255,.018)),
+        rgba(8, 13, 19, .82);
+      opacity: .45;
+      transform: translateY(7px);
+      animation: cardFocus var(--beat) linear infinite;
+    }
+
+    .release-card:nth-child(1) { animation-delay: 6s; }
+    .release-card:nth-child(2) { animation-delay: 8.5s; }
+    .release-card:nth-child(3) { animation-delay: 11s; }
+
+    @keyframes cardFocus {
+      0%, 15%, 100% { opacity: .45; transform: translateY(7px); border-color: rgba(154, 178, 201, .18); }
+      4%, 12% { opacity: 1; transform: translateY(0); border-color: rgba(59, 231, 255, .5); box-shadow: 0 12px 34px rgba(59,231,255,.08); }
+    }
+
+    .release-card strong {
+      display: block;
+      color: #f7fbff;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      height: 22px;
+      padding: 0 8px;
+      border-radius: 99px;
+      background: rgba(57, 230, 187, .1);
+      color: var(--mint);
+      font: 800 10px var(--mono);
+      text-transform: uppercase;
+    }
+
+    .card-copy {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .systems {
+      display: grid;
+      grid-template-columns: 1fr 1.08fr;
+      gap: 18px;
+      min-height: 332px;
+    }
+
+    .compose {
+      padding: 14px;
+    }
+
+    .compose-flow {
+      display: grid;
+      gap: 10px;
+    }
+
+    .compose-step {
+      position: relative;
+      display: grid;
+      grid-template-columns: 38px 1fr auto;
+      gap: 11px;
+      align-items: center;
+      min-height: 58px;
+      padding: 10px;
+      border: 1px solid rgba(154,178,201,.17);
+      border-radius: 7px;
+      background: rgba(255,255,255,.032);
+      opacity: .45;
+      animation: stepFocus var(--beat) linear infinite;
+    }
+
+    .compose-step:nth-child(1) { animation-delay: 15s; }
+    .compose-step:nth-child(2) { animation-delay: 18s; }
+    .compose-step:nth-child(3) { animation-delay: 21.5s; }
+    .compose-step:nth-child(4) { animation-delay: 25s; }
+
+    @keyframes stepFocus {
+      0%, 14%, 100% { opacity: .45; transform: translateX(0); border-color: rgba(154,178,201,.17); }
+      4%, 11% { opacity: 1; transform: translateX(4px); border-color: rgba(57,230,187,.46); }
+    }
+
+    .icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 7px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(59,231,255,.32);
+      color: var(--cyan);
+      background: rgba(59,231,255,.08);
+      font: 900 14px var(--mono);
+    }
+
+    .compose-step b {
+      display: block;
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .compose-step span {
+      color: var(--muted);
+      font: 650 11px var(--mono);
+    }
+
+    .status {
+      color: var(--mint);
+      font: 900 10px var(--mono);
+      text-transform: uppercase;
+    }
+
+    .graph {
+      position: relative;
+      min-height: 100%;
+      overflow: hidden;
+    }
+
+    .graph-canvas {
+      position: relative;
+      min-height: 288px;
+      margin: 14px;
+      border: 1px solid rgba(154,178,201,.17);
+      border-radius: 7px;
+      background:
+        linear-gradient(rgba(255,255,255,.024) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.022) 1px, transparent 1px),
+        rgba(5, 10, 15, .64);
+      background-size: 24px 24px;
+    }
+
+    .line {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--line-hot), transparent);
+      transform-origin: left center;
+      opacity: .24;
+      animation: linePulse var(--beat) linear infinite;
+    }
+
+    .line-a { left: 28%; top: 45%; width: 38%; transform: rotate(0deg); animation-delay: 25.6s; }
+    .line-b { left: 27%; top: 48%; width: 30%; transform: rotate(29deg); animation-delay: 27s; }
+    .line-c { left: 49%; top: 42%; width: 24%; transform: rotate(-26deg); animation-delay: 28s; }
+
+    @keyframes linePulse {
+      0%, 15%, 100% { opacity: .24; filter: none; }
+      4%, 12% { opacity: 1; filter: drop-shadow(0 0 8px rgba(57,230,187,.8)); }
+    }
+
+    .node {
+      position: absolute;
+      width: 122px;
+      padding: 12px 10px;
+      border-radius: 7px;
+      border: 1px solid rgba(154,178,201,.2);
+      background: rgba(11, 17, 25, .94);
+      text-align: center;
+      box-shadow: 0 12px 28px rgba(0,0,0,.28);
+      opacity: .72;
+      animation: nodePulse var(--beat) linear infinite;
+    }
+
+    .node b {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 5px;
+    }
+
+    .node span {
+      color: var(--muted);
+      font: 750 10px var(--mono);
+      text-transform: uppercase;
+    }
+
+    .node-api { left: 7%; top: 36%; animation-delay: 25.8s; }
+    .node-db { right: 7%; top: 36%; animation-delay: 26.6s; }
+    .node-web { left: 38%; top: 9%; animation-delay: 28s; }
+    .node-worker { left: 38%; bottom: 10%; animation-delay: 29.2s; }
+
+    @keyframes nodePulse {
+      0%, 14%, 100% { opacity: .72; border-color: rgba(154,178,201,.2); transform: scale(1); }
+      4%, 11% { opacity: 1; border-color: rgba(57,230,187,.58); transform: scale(1.035); }
+    }
+
+    .validation {
+      position: absolute;
+      right: 18px;
+      bottom: 18px;
+      left: 18px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 13px;
+      border-radius: 7px;
+      border: 1px solid rgba(114,242,154,.35);
+      background: rgba(18, 42, 30, .72);
+      opacity: 0;
+      transform: translateY(12px);
+      animation: validationIn var(--beat) linear infinite;
+    }
+
+    @keyframes validationIn {
+      0%, 74%, 100% { opacity: 0; transform: translateY(12px); }
+      80%, 94% { opacity: 1; transform: translateY(0); }
+    }
+
+    .check {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--green);
+      color: #06100a;
+      font: 950 20px var(--mono);
+    }
+
+    .validation b {
+      display: block;
+      font-size: 13px;
+    }
+
+    .validation span {
+      color: #bbeccd;
+      font: 700 11px var(--mono);
+    }
+
+    .score {
+      color: var(--green);
+      font: 900 18px var(--mono);
+    }
+
+    .scan {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, transparent, rgba(59,231,255,.09), transparent);
+      height: 26%;
+      transform: translateY(-100%);
+      animation: scan var(--beat) ease-in-out infinite;
+      mix-blend-mode: screen;
+    }
+
+    @keyframes scan {
+      0%, 10% { transform: translateY(-100%); }
+      38% { transform: translateY(220%); }
+      68% { transform: translateY(50%); }
+      91% { transform: translateY(310%); }
+      100% { transform: translateY(-100%); }
+    }
+
+    .caption {
+      position: absolute;
+      left: clamp(18px, 2vw, 30px);
+      right: clamp(18px, 2vw, 30px);
+      bottom: clamp(18px, 2vw, 30px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      color: var(--muted);
+      font: 700 12px var(--mono);
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+
+    .caption strong {
+      color: #f1fbff;
+    }
+
+    @media (max-width: 980px) {
+      .stage { padding: 14px; place-items: start center; }
+      .demo {
+        width: calc(100vw - 28px);
+        min-height: auto;
+        padding: 16px;
+      }
+      .topbar {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .controls { justify-content: flex-start; width: 100%; }
+      .grid,
+      .systems {
+        grid-template-columns: 1fr;
+      }
+      .terminal { min-height: 300px; font-size: 12px; }
+      .release-grid,
+      .stats {
+        grid-template-columns: 1fr;
+      }
+      .beats { grid-template-columns: repeat(3, 1fr); }
+      .caption {
+        position: static;
+        margin-top: 16px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+      }
+      .terminal-line,
+      .validation {
+        opacity: 1;
+        transform: none;
+      }
+      .typed { max-width: none; }
     }
   </style>
 </head>
 <body>
-  <main class="stage">
-    <section class="left">
-      <header>
-        <div>
-          <div class="tag">TDK CLI launch proof</div>
-          <h1>Private source.<br>Public binaries.<br>Runnable stack.</h1>
+  <main class="stage" id="stage">
+    <section class="demo" aria-label="TDK CLI marketing demo animation">
+      <div class="scan"></div>
+
+      <header class="topbar">
+        <div class="brand">
+          <div class="mark" aria-hidden="true">TDK</div>
+          <div>
+            <h1>Ship private source. Publish clean binaries.</h1>
+            <p class="sub">curl installer → public release assets → Compose workflow → dependency graph → DoD validation</p>
+          </div>
         </div>
-        <div class="status">DoD PASSED</div>
+
+        <div class="controls" aria-label="Animation controls">
+          <button class="control" id="pauseBtn" type="button" aria-label="Pause animation">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>
+            <span id="pauseText">Pause</span>
+          </button>
+          <button class="control" id="replayBtn" type="button" aria-label="Replay animation">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v6h6"/></svg>
+            Replay
+          </button>
+          <div class="clock" id="clock">00:00</div>
+        </div>
       </header>
-      <div class="terminal" aria-label="TDK CLI animated terminal">
-        <div class="line" style="--i:0"><span class="prompt">$</span> curl -fsSL https://tdk-landscape.github.io/install.sh | sh</div>
-        <div class="line" style="--i:1"><span class="ok">✓</span> Installed tdk-linux-arm64 <span class="dim">v1.1.0</span></div>
-        <div class="line" style="--i:2"><span class="prompt">$</span> gh release view v1.1.0 --repo tdk-cli-releases</div>
-        <div class="line" style="--i:3"><span class="ok">✓</span> compiled assets only <span class="hot">source stays private</span></div>
-        <div class="line" style="--i:4"><span class="prompt">$</span> docker compose run --rm tdk tdk project --yes</div>
-        <div class="line" style="--i:5"><span class="ok">✓</span> generated .tdk/project.json + Tiltfile</div>
-        <div class="line" style="--i:6"><span class="prompt">$</span> tdk resource api --type backend --stack pre-alpha</div>
-        <div class="line" style="--i:7"><span class="prompt">$</span> tdk resource database --type backend --stack pre-alpha</div>
-        <div class="line" style="--i:8"><span class="ok">✓</span> api.internalDependencies = ["database"]</div>
-        <div class="line" style="--i:9"><span class="prompt">$</span> tdk status --verbose</div>
-        <div class="line" style="--i:10"><span class="ok">✓</span> pre-alpha: 2 resources discovered</div>
-      </div>
-      <div class="footer">
-        <span>tdk-landscape.github.io</span>
-        <span>recording loop: 15s</span>
-      </div>
-    </section>
-    <section class="right">
-      <div class="diagram">
-        <svg viewBox="0 0 600 700" preserveAspectRatio="none">
-          <path class="p1" d="M120 95 C240 80, 330 90, 465 125"/>
-          <path class="p2" d="M465 175 C395 255, 250 250, 178 315"/>
-          <path class="p3" d="M205 390 C280 440, 360 430, 455 390"/>
-          <path class="p4" d="M455 472 C390 575, 300 570, 250 595"/>
-        </svg>
-        <div class="node n1"><strong>Short install URL</strong><small>One command, no custom domain required.</small></div>
-        <div class="node n2"><strong>Public releases</strong><small>Compiled Linux/macOS binaries and checksums.</small></div>
-        <div class="node n3"><strong>Docker Compose</strong><small>Try TDK without host install.</small></div>
-        <div class="node n4"><strong>Dependency graph</strong><small>api waits on database via internalDependencies.</small></div>
-        <div class="node n5"><strong>Quick Start DoD</strong><small>Fresh container smoke passed: install, generate, validate.</small></div>
-        <div class="badge">
-          <div class="metric"><span>binary</span><span class="ok">v1.1.0</span></div>
-          <div class="metric"><span>resources</span><span class="ok">2 discovered</span></div>
-          <div class="metric"><span>source leak</span><span class="ok">none</span></div>
+
+      <div class="grid">
+        <section class="panel" aria-label="Terminal">
+          <div class="panel-head">
+            <span>Operator Terminal</span>
+            <span class="activity" aria-hidden="true"></span>
+          </div>
+          <div class="terminal">
+            <div class="terminal-line"><span class="prompt">$</span> <span class="typed">curl -fsSL https://tdk.dev/install | sh</span><span class="cursor"></span></div>
+            <div class="terminal-line muted">Resolving latest public release for darwin-arm64...</div>
+            <div class="terminal-line ok">✓ tdk installed to ~/.local/bin/tdk</div>
+            <div class="terminal-line"><span class="prompt">$</span> tdk release inspect <span class="path">tdk-cli</span></div>
+            <div class="terminal-line ok">✓ source repository private · compiled binaries public</div>
+            <div class="terminal-line"><span class="prompt">$</span> docker compose up --build</div>
+            <div class="terminal-line warn">compose: api, database, worker, web detected</div>
+            <div class="terminal-line ok">✓ generated project resources and service contracts</div>
+            <div class="terminal-line muted">linking api → database with health-gated startup</div>
+            <div class="terminal-line"><span class="prompt">$</span> tdk quick-start validate</div>
+            <div class="terminal-line ok">✓ Definition of Done passed · ready for founders/devs</div>
+
+            <div class="progress" aria-hidden="true"><span></span></div>
+            <div class="stats" aria-label="Demo metrics">
+              <div class="metric"><b>&lt; 60s</b><span>Install Path</span></div>
+              <div class="metric"><b>4 svc</b><span>Compose Stack</span></div>
+              <div class="metric"><b>100%</b><span>DoD Pass</span></div>
+            </div>
+          </div>
+        </section>
+
+        <div class="right">
+          <section class="panel timeline" aria-label="Timeline beats">
+            <div class="panel-head">
+              <span>30-45s Recording Loop</span>
+              <span class="ghost">auto-loop</span>
+            </div>
+            <div class="timeline-track" aria-hidden="true">
+              <div class="timeline-marker"></div>
+            </div>
+            <div class="beats">
+              <div class="beat-label">Install</div>
+              <div class="beat-label">Release</div>
+              <div class="beat-label">Compose</div>
+              <div class="beat-label">Generate</div>
+              <div class="beat-label">Depends</div>
+              <div class="beat-label">Validate</div>
+            </div>
+          </section>
+
+          <section class="panel" aria-label="Release assets">
+            <div class="panel-head">
+              <span>Public Release Assets</span>
+              <span class="ghost">source stays private</span>
+            </div>
+            <div class="release-grid">
+              <article class="release-card">
+                <strong>tdk-darwin-arm64</strong>
+                <span class="chip">signed</span>
+                <p class="card-copy">Native binary pulled by the short installer URL.</p>
+              </article>
+              <article class="release-card">
+                <strong>tdk-linux-x64</strong>
+                <span class="chip">public</span>
+                <p class="card-copy">Compiled asset only; implementation remains locked down.</p>
+              </article>
+              <article class="release-card">
+                <strong>checksums.txt</strong>
+                <span class="chip">verified</span>
+                <p class="card-copy">Installer confirms integrity before touching the path.</p>
+              </article>
+            </div>
+          </section>
+
+          <div class="systems">
+            <section class="panel compose" aria-label="Docker compose workflow">
+              <div class="panel-head">
+                <span>Docker Compose Workflow</span>
+                <span class="ghost">generated</span>
+              </div>
+              <div class="compose-flow">
+                <div class="compose-step">
+                  <div class="icon">01</div>
+                  <div><b>Scaffold resources</b><span>routes, services, env, compose</span></div>
+                  <div class="status">ready</div>
+                </div>
+                <div class="compose-step">
+                  <div class="icon">02</div>
+                  <div><b>Build stack</b><span>docker compose up --build</span></div>
+                  <div class="status">live</div>
+                </div>
+                <div class="compose-step">
+                  <div class="icon">03</div>
+                  <div><b>Wire dependencies</b><span>api waits for database health</span></div>
+                  <div class="status">linked</div>
+                </div>
+                <div class="compose-step">
+                  <div class="icon">04</div>
+                  <div><b>Quick Start validation</b><span>smoke checks and DoD gates</span></div>
+                  <div class="status">passed</div>
+                </div>
+              </div>
+            </section>
+
+            <section class="panel graph" aria-label="Dependency graph">
+              <div class="panel-head">
+                <span>Dependency Graph</span>
+                <span class="ghost">api depends on database</span>
+              </div>
+              <div class="graph-canvas">
+                <div class="line line-a" aria-hidden="true"></div>
+                <div class="line line-b" aria-hidden="true"></div>
+                <div class="line line-c" aria-hidden="true"></div>
+
+                <div class="node node-api"><b>api</b><span>service</span></div>
+                <div class="node node-db"><b>database</b><span>postgres</span></div>
+                <div class="node node-web"><b>web</b><span>client</span></div>
+                <div class="node node-worker"><b>worker</b><span>jobs</span></div>
+
+                <div class="validation">
+                  <div class="check">✓</div>
+                  <div><b>Definition of Done passed</b><span>install, release, compose, graph, smoke validation</span></div>
+                  <div class="score">6/6</div>
+                </div>
+              </div>
+            </section>
+          </div>
         </div>
       </div>
+
+      <footer class="caption">
+        <span><strong>TDK CLI</strong> demo animation · no external assets · recording-friendly loop</span>
+        <span>Private source / public compiled binaries</span>
+      </footer>
     </section>
   </main>
-  <div class="controls">
-    <button onclick="location.reload()">Replay</button>
-    <a class="button" href="https://tdk-landscape.github.io/tdk-website/docs/quickstart/">Quick Start</a>
-  </div>
+
+  <script>
+    const stage = document.getElementById("stage");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const pauseText = document.getElementById("pauseText");
+    const replayBtn = document.getElementById("replayBtn");
+    const clock = document.getElementById("clock");
+    const duration = 40;
+    let startedAt = performance.now();
+    let pausedAt = 0;
+    let pausedTotal = 0;
+    let isPaused = false;
+
+    function format(seconds) {
+      const clamped = Math.max(0, Math.floor(seconds));
+      return `00:${String(clamped).padStart(2, "0")}`;
+    }
+
+    function tick(now) {
+      if (!isPaused) {
+        const elapsed = ((now - startedAt - pausedTotal) / 1000) % duration;
+        clock.textContent = format(elapsed);
+      }
+      requestAnimationFrame(tick);
+    }
+
+    function setPaused(next) {
+      isPaused = next;
+      stage.classList.toggle("paused", isPaused);
+      pauseText.textContent = isPaused ? "Resume" : "Pause";
+      pauseBtn.setAttribute("aria-label", isPaused ? "Resume animation" : "Pause animation");
+      if (isPaused) {
+        pausedAt = performance.now();
+      } else {
+        pausedTotal += performance.now() - pausedAt;
+      }
+    }
+
+    pauseBtn.addEventListener("click", () => setPaused(!isPaused));
+
+    replayBtn.addEventListener("click", () => {
+      startedAt = performance.now();
+      pausedAt = 0;
+      pausedTotal = 0;
+      if (isPaused) setPaused(false);
+      stage.classList.add("restart");
+      void stage.offsetWidth;
+      stage.classList.remove("restart");
+    });
+
+    requestAnimationFrame(tick);
+  </script>
 </body>
 </html>
