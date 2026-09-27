@@ -1,6 +1,6 @@
 # TDK Demo Animation
 
-Standalone, recording-friendly marketing demo animation for TDK CLI.
+Standalone, recording-friendly demo animation for [TDK CLI](https://github.com/tdk-landscape/tdk-cli-core).
 
 ## Files
 
@@ -9,10 +9,11 @@ Standalone, recording-friendly marketing demo animation for TDK CLI.
 
 ## View
 
-Open `index.html` directly in a browser:
+Watch it live at **https://tdk-landscape.github.io/tdk-demo-animation/**, or open `index.html` directly in a browser:
 
 ```bash
-open /private/var/www/2025/ollamar1/tdk-demo-animation/index.html
+git clone https://github.com/tdk-landscape/tdk-demo-animation.git
+open tdk-demo-animation/index.html
 ```
 
 ## Recording Notes
@@ -20,3 +21,7 @@ open /private/var/www/2025/ollamar1/tdk-demo-animation/index.html
 - The animation loops every 40 seconds.
 - Use the on-screen Pause and Replay controls for capture timing.
 - The page is designed for a dark, high-contrast terminal/control-room look and includes the required beats: curl install, public release assets, Docker Compose workflow, project/resource generation, API-to-database dependency graph, and Quick Start / DoD validation.
+
+---
+
+⭐ **Like what you see?** [Star tdk-cli-core](https://github.com/tdk-landscape/tdk-cli-core) so other developers can find it.
